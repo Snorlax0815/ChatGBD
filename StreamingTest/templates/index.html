@@ -1,23 +1,21 @@
+<!-- templates/index.html -->
+
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Text Streaming Example</title>
+    <title>Streamed Content</title>
 </head>
 <body>
-    <h1>Text Streaming</h1>
-    <div id="text-container"></div>
+    <h1>Streamed Content</h1>
+    <div id="content"></div>
 
-    <script>
-        // Create an EventSource to listen for SSE updates
-        var eventSource = new EventSource("/stream");
+    <script type="text/javascript">
+        var source = new EventSource("/stream/your_prompt");
 
-        // Event listener for receiving SSE updates
-        eventSource.onmessage = function(event) {
-            var word = event.data;
-
-            // Append the word to the text container
-            var textContainer = document.getElementById('text-container');
-            textContainer.innerHTML += word + ' ';
+        source.onmessage = function(event) {
+            var token = event.data;
+            var contentDiv = document.getElementById("content");
+            contentDiv.innerHTML += token + ' ';
         };
     </script>
 </body>
