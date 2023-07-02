@@ -33,9 +33,15 @@ def stream_tokens(prompt):
 
     return Response(generate_tokens(), mimetype='text/plain')
 
+@app.route('/test')
+def test():
+    return render_template('index.html', chatHistory=chatHistory, currentPrompt="User Prompt")
+
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('index.html', chatHistory=chatHistory, currentPrompt="User Prompt")
 
 if __name__ == '__main__':
     app.run()
+
+chatHistory = {"Prompt1": "Ja das ist eine Antwort", "Prompt2": "Neee das ist keine Antwort"}

@@ -4,9 +4,32 @@
 <html>
 <head>
     <title>Streamed Content</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='bootstrap.css')}}"/>
 </head>
-<body>
-    <h1>Streamed Content</h1>
+<body class="text-center">
+    <h1 class="border-bottom">Streamed Content</h1>
+    <div class="container-fluid h-100 mt-1 mb-1 overflow-y-auto ">
+        <div class="list-group border ms-auto me-auto col-10 text-start w-75 mt-auto h-100 mt-1 border-2 border-secondary-subtle">
+            {% for key, value in chatHistory.items() %}
+                <div class="list-group-item ms-auto me-auto border-0 w-100 col-12">
+                    <div class="bg-light-subtle border-bottom 1">
+                        <pre>{{ key | safe }}</pre>
+                    </div>
+                    <div class="bg-light mb-1">
+                        <pre> {{ value | safe }}</pre>
+                    </div>
+                </div>
+            {% endfor %}
+            <div class="list-group-item ms-auto me-auto border-0 w-100 col-12">
+                <div class="bg-light-subtle border-bottom 1">
+                    <pre>{{ currentPrompt }}</pre>
+                </div>
+                <div class="bg-light mb-1">
+                    <pre id="content"></pre>
+                </div>
+            </div>
+        </div>
+    </div>
     <div id="content"></div>
 
     <script type="text/javascript">
