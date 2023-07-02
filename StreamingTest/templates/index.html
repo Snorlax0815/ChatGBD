@@ -30,16 +30,28 @@
             </div>
         </div>
     </div>
-    <div id="content"></div>
 
+    <form method="POST" action="/">
+        <div class="mb-3 mt-3">
+            <label for="prompt" class="form-label">Prompt:</label>
+            <input type="text" class="form-control" id="prompt" name="prompt" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Generate</button>
+    </form>
+
+    {% if promptGenerated %}
     <script type="text/javascript">
-        var source = new EventSource("/stream/your_prompt");
+        let prompt = "{{ currentPrompt }}";
+        console.log(prompt)
+        let source = new EventSource("/stream/" + prompt);
 
         source.onmessage = function(event) {
-            var token = event.data;
-            var contentDiv = document.getElementById("content");
-            contentDiv.innerHTML += token + ' ';
+            let token = event.data;
+            let contentDiv = document.getElementById("content");
+            contentDiv.innerHTML += token;
+            console.log(token)
         };
     </script>
+    {% endif %}
 </body>
 </html>
