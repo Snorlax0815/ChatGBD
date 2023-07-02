@@ -8,15 +8,8 @@ app = Flask(__name__)
 
 
 @app.get('/')
-def hello_world():
+def render():
     print(Generator.history)
-    return render_template('index.html', title="ChatGBD", chatHistory=Generator.history)
-
-
-@app.get('/test')
-def test():
-    s = "Hallo, hier sit der Code: \n```def clearhistory():\n\tprint(\"clearing history\")\n\tGenerator.clearhistory()\n\treturn hello_world()``` Das finde ich sehr cool!"
-    Generator.history[0] = ["Prompt", Generator.separateCode(s)]
     return render_template('index.html', title="ChatGBD", chatHistory=Generator.history)
 
 
@@ -26,26 +19,17 @@ def convert_spaces_to_tabs_filter(s):
 
 
 @app.post('/')
-def hallowithpost():
+def handleprompt():
     Generator.generate(escape(request.form['Prompt']))
     print(Generator.history)
-    return hello_world()
+    return render()
 
 
 @app.post('/clearhistory')
 def clearhistory():
     print("clearing history")
     Generator.clearhistory()
-    return hello_world()
-
-
-"""
-@app.post('/generate')
-def generate():
-    Generator.generate(escape(request.form['prompt']))
-    # print(Generator.history)
-    return render_template('index.html', title="GPT4All", chatHistory=Generator.history)
-"""
+    return render()
 
 
 class Generator:
@@ -54,9 +38,6 @@ class Generator:
     Es wird auch ein Chatverlauf gespeichert
     """
     model = GPT4All(model_path="static/models/snoozy.bin")
-    # model = GPT4All(model_path="static/models/ggml-gpt4all-l13b-snoozy.bin")
-    # model = GPT4All(model_path="static/models/ggml-nous-gpt4-vicuna-13b.bin")
-    # model = GPT4All("static/models/ggml-v3-13b-hermes-q5_1.bin")
     history = {}
 
     def __init__(self):
@@ -64,6 +45,12 @@ class Generator:
 
     @staticmethod
     def generate(prompt):
+        """
+        Generates text with the GPT4All model
+        I have set some parameters, but I don't know if they can still be improved.
+        :param prompt: The prompt to generate text from
+        :return: A dictionary with the prompt and the generated text pairs.
+        """
         returntext = ""
         print("in generation")
         try:
@@ -78,8 +65,6 @@ class Generator:
             print(e)
             sys.exit(1)
         Generator.history[len(Generator.history)] = [prompt, Generator.separateCode(returntext)]
-        # print(returntext)
-        # print(Generator.history)
         Generator.separateCode(returntext)
         return returntext
 
@@ -90,6 +75,13 @@ class Generator:
 
     @staticmethod
     def separateCode(text):
+        """
+        This function tries its best to separates code from text.
+        Since the model generates code however it wants, it is not always possible to separate code from text.
+        The code will be surrounded by ```.
+        :param text: The text to separate
+        :return: A list of strings, where every second string is code
+        """
         returnList = []
         if text.count("```") < 1:
             if text.count("``") <1:
