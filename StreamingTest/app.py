@@ -31,6 +31,7 @@ def stream_tokens(prompt):
     def generate_tokens():
         for token in Generator.generate(prompt):
             yield 'data: ' + token + '\n\n'
+        yield 'data: ' + "[STOPCODE]" + '\n\n'
 
     return Response(generate_tokens(), mimetype='text/event-stream')
 

@@ -47,9 +47,14 @@
 
         source.onmessage = function(event) {
             let token = event.data;
-            let contentDiv = document.getElementById("content");
-            contentDiv.innerHTML += token;
-            console.log(token)
+            if(token === "[STOPCODE]"){
+                source.close();
+            }
+            else{
+                let contentDiv = document.getElementById("content");
+                contentDiv.innerHTML += token;
+                console.log(token)
+            }
         };
     </script>
     {% endif %}
