@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en" class="h-100">
+<head>
+    <meta charset="UTF-8">
+    <title>{{title}}</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='bootstrap.css')}}"/>
+</head>
+<style>
+    .pre-scrollable {
+        overflow-y: scroll;
+    }
+    .pre-not-scrollable {
+        overflow: auto;
+    }
+</style>
+<body class="h-100">
+    <div class="text-center m-0 p-0 h-100 d-flex flex-column">
+        <nav class="navbar navbar-light bg-light ms-auto mb-auto w-100 me-auto justify-content-around">
+            <div class="w-50 m-auto">
+                <h1>ChatGBD</h1>
+            </div>
+        </nav>
+
+        <div class="container-fluid h-100 mt-1 mb-1 overflow-y-auto ">
+            <div class="list-group border ms-auto me-auto col-10 text-start w-75 mt-auto h-100 mt-1 border-2 border-secondary-subtle">
+            {% for key, value in chatHistory.items() %}
+                <div class="list-group-item ms-auto me-auto border-0 w-100 col-12">
+                    <div class="bg-light-subtle border-bottom 1">
+                        <pre>> {{ value[0] | safe }}</pre>
+                    </div>
+                    <div class="bg-light mb-1">
+                        {% for answer in value[1] %}
+                            {% if answer.startswith("`") %}
+                                <div class="m-1 bg-dark rounded-2">
+
+                                    <code class="w-100 m-3 bg-dark language-javascript ">
+                                            <!--.replace("\n", "<br>").replace("    ", "&#9;").replace("    ", "&#9;").replace("\t", "&#9;")-->
+                                            {{ answer.replace("`", "").replace("\n", "<br>").replace("    ", "&#9;").replace("    ", "&#9;").replace("\t", "&#9;") |safe }}
+                                    </code>
+                                </div>
+                            {% else %}
+                                <p class="w-100">{{ answer.replace("`", "").replace("\n", "<br>").replace("    ", "&#9;") | safe }}</p>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        </div>
+
+
+    <div class="ms-auto me-auto w-100 ">
+        <form action="/" method="post" class="text-center w-75 ms-auto me-auto mb-2">
+            <div class="input-group mb-3">
+                <span class="input-group-text" id="basic-addon1">> </span>
+                <input type="text" class="form-control" name="Prompt" placeholder="Prompt" aria-label="Prompt" aria-describedby="basic-addon1">
+            </div>
+            <button class="btn btn-primary w-25" type="submit">Abschicken!</button>
+        </form>
+
+        <div class="flex-row mb-2">
+            <form action="{{ url_for('clearhistory') }}" method="post" class="w-75 ms-auto me-auto">
+                <button class="btn btn-primary w-25">Neustarz2</button>
+            </form>
+        </div>
+
+        <footer class="w-100 navbar navbar-light bg-light">
+            <div class="w-100 container text-center text-dark ">
+                <p class="p-auto m-auto mt-2 mb-3">&copy; 2023 Markus Rafeiner</p>
+            </div>
+        </footer>
+    </div>
+
+    </div>
+</body>
+</html>
